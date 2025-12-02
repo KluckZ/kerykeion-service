@@ -17,14 +17,16 @@ def extract_planets(subject):
     for planet_name in planet_names:
         if hasattr(subject, planet_name):
             planet_obj = getattr(subject, planet_name)
-            planets.append({
-                'name': planet_name,
-                'sign': planet_obj.get('sign', ''),
-                'position': planet_obj.get('position', 0.0),
-                'abs_pos': planet_obj.get('abs_pos', 0.0),
-                'house': planet_obj.get('house', ''),
-                'retrograde': planet_obj.get('retrograde', False)
-            })
+            # Verificar que planet_obj no sea None y sea un dict
+            if planet_obj and isinstance(planet_obj, dict):
+                planets.append({
+                    'name': planet_name,
+                    'sign': planet_obj.get('sign', ''),
+                    'position': planet_obj.get('position', 0.0),
+                    'abs_pos': planet_obj.get('abs_pos', 0.0),
+                    'house': planet_obj.get('house', ''),
+                    'retrograde': planet_obj.get('retrograde', False)
+                })
 
     return planets
 
@@ -37,12 +39,14 @@ def extract_houses(subject):
         house_attr = f'first_house' if i == 1 else f'house{i}'
         if hasattr(subject, house_attr):
             house_obj = getattr(subject, house_attr)
-            houses.append({
-                'house_number': i,
-                'sign': house_obj.get('sign', ''),
-                'position': house_obj.get('position', 0.0),
-                'abs_pos': house_obj.get('abs_pos', 0.0)
-            })
+            # Verificar que house_obj no sea None y sea un dict
+            if house_obj and isinstance(house_obj, dict):
+                houses.append({
+                    'house_number': i,
+                    'sign': house_obj.get('sign', ''),
+                    'position': house_obj.get('position', 0.0),
+                    'abs_pos': house_obj.get('abs_pos', 0.0)
+                })
 
     return houses
 
@@ -51,15 +55,17 @@ def extract_aspects(subject):
     """Extrae aspectos del objeto AstrologicalSubject"""
     aspects = []
 
-    if hasattr(subject, 'aspects_list'):
+    if hasattr(subject, 'aspects_list') and subject.aspects_list:
         for aspect in subject.aspects_list:
-            aspects.append({
-                'planet1': aspect.get('p1_name', ''),
-                'planet2': aspect.get('p2_name', ''),
-                'aspect': aspect.get('aspect', ''),
-                'orb': aspect.get('orb', 0.0),
-                'diff': aspect.get('orbit', 0.0),
-                'aid': aspect.get('aid', 0)
-            })
+            # Verificar que aspect sea un dict
+            if aspect and isinstance(aspect, dict):
+                aspects.append({
+                    'planet1': aspect.get('p1_name', ''),
+                    'planet2': aspect.get('p2_name', ''),
+                    'aspect': aspect.get('aspect', ''),
+                    'orb': aspect.get('orb', 0.0),
+                    'diff': aspect.get('orbit', 0.0),
+                    'aid': aspect.get('aid', 0)
+                })
 
     return aspects
