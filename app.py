@@ -163,38 +163,57 @@ async def generate_svg(request: SVGGenerationRequest):
     Returns:
         SVG string de la carta natal
     """
+    import tempfile
+    from pathlib import Path
+
     try:
         logger.info(f"Generando SVG para: {request.name}")
 
-        # Crear objeto astrológico
-        subject = AstrologicalSubject(
-            name=request.name,
-            year=request.year,
-            month=request.month,
-            day=request.day,
-            hour=request.hour,
-            minute=request.minute,
-            city=request.city,
-            lng=request.longitude,
-            lat=request.latitude,
-            tz_str=request.timezone,
-            online=False
-        )
+        # Crear directorio temporal
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output_dir = Path(temp_dir)
 
-        # Generar SVG
-        chart = KerykeionChartSVG(subject, chart_type=request.chart_type)
-        svg_content = chart.makeSVG()
+            # Crear objeto astrológico
+            subject = AstrologicalSubject(
+                name=request.name,
+                year=request.year,
+                month=request.month,
+                day=request.day,
+                hour=request.hour,
+                minute=request.minute,
+                city=request.city,
+                lng=request.longitude,
+                lat=request.latitude,
+                tz_str=request.timezone,
+                online=False
+            )
 
-        logger.info(f"SVG generado exitosamente para: {request.name}")
+            # Generar SVG (guarda en archivo)
+            chart = KerykeionChartSVG(subject, chart_type=request.chart_type, new_output_directory=str(output_dir))
+            chart.makeSVG()
 
-        return {
-            "success": True,
-            "svg": svg_content,
-            "metadata": {
-                "name": request.name,
-                "chart_type": request.chart_type
+            # Buscar archivo SVG generado
+            svg_files = list(output_dir.glob("*.svg"))
+
+            if not svg_files:
+                raise Exception("No se generó ningún archivo SVG")
+
+            # Leer contenido del SVG
+            svg_file_path = svg_files[0]
+            with open(svg_file_path, 'r', encoding='utf-8') as f:
+                svg_content = f.read()
+
+            logger.info(f"SVG generado exitosamente para: {request.name} ({len(svg_content)} bytes)")
+
+            return {
+                "success": True,
+                "svg": svg_content,
+                "metadata": {
+                    "name": request.name,
+                    "chart_type": request.chart_type,
+                    "filename": svg_file_path.name
+                }
             }
-        }
 
     except Exception as e:
         logger.error(f"Error generando SVG: {str(e)}")
