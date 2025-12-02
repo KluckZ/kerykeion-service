@@ -189,7 +189,21 @@ async def generate_svg(request: SVGGenerationRequest):
             )
 
             # Generar SVG (guarda en archivo)
-            chart = KerykeionChartSVG(subject, chart_type=request.chart_type, new_output_directory=str(output_dir))
+            # Excluir ángulos de los aspectos visuales en el gráfico
+            # (los aspectos de datos se calculan en la Edge Function)
+            active_points = [
+                "Sun", "Moon", "Mercury", "Venus", "Mars",
+                "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
+                "Mean_Node", "Mean_Lilith", "Chiron"
+                # Excluimos: "Asc", "Mc", "Dsc", "Ic" para no mostrar aspectos a ángulos
+            ]
+
+            chart = KerykeionChartSVG(
+                subject,
+                chart_type=request.chart_type,
+                new_output_directory=str(output_dir),
+                active_points=active_points
+            )
             chart.makeSVG()
 
             # Buscar archivo SVG generado
