@@ -194,7 +194,7 @@ async def generate_svg(request: SVGGenerationRequest):
             active_points = [
                 "Sun", "Moon", "Mercury", "Venus", "Mars",
                 "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
-                "Mean_Node", "Mean_Lilith", "Chiron"
+                "Mean_Node", "Mean_South_Node", "Mean_Lilith", "Chiron"
                 # Excluimos: "Asc", "Mc", "Dsc", "Ic" para no mostrar aspectos a ángulos
             ]
 
