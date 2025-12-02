@@ -14,6 +14,59 @@ def extract_planets(subject):
         'mean_node', 'true_node', 'chiron', 'pars_fortuna'
     ]
 
+    # Agregar Lilith (mean_lilith en Kerykeion)
+    if hasattr(subject, 'mean_lilith'):
+        lilith_obj = subject.mean_lilith
+        if lilith_obj:
+            try:
+                planets.append({
+                    'name': 'lilith',
+                    'sign': getattr(lilith_obj, 'sign', ''),
+                    'sign_num': getattr(lilith_obj, 'sign_num', 0),
+                    'position': getattr(lilith_obj, 'position', 0.0),
+                    'abs_pos': getattr(lilith_obj, 'abs_pos', 0.0),
+                    'emoji': getattr(lilith_obj, 'emoji', '⚸'),
+                    'house': getattr(lilith_obj, 'house', ''),
+                    'retrograde': False  # Lilith no es retrógrada
+                })
+            except Exception:
+                pass
+
+    # Agregar ángulos (ASC y MC desde casas)
+    if hasattr(subject, 'first_house'):
+        asc_obj = subject.first_house
+        if asc_obj:
+            try:
+                planets.append({
+                    'name': 'asc',
+                    'sign': getattr(asc_obj, 'sign', ''),
+                    'sign_num': getattr(asc_obj, 'sign_num', 0),
+                    'position': getattr(asc_obj, 'position', 0.0),
+                    'abs_pos': getattr(asc_obj, 'abs_pos', 0.0),
+                    'emoji': '⬆',
+                    'house': '',  # ASC no está en una casa
+                    'retrograde': False
+                })
+            except Exception:
+                pass
+
+    if hasattr(subject, 'tenth_house'):
+        mc_obj = subject.tenth_house
+        if mc_obj:
+            try:
+                planets.append({
+                    'name': 'mc',
+                    'sign': getattr(mc_obj, 'sign', ''),
+                    'sign_num': getattr(mc_obj, 'sign_num', 0),
+                    'position': getattr(mc_obj, 'position', 0.0),
+                    'abs_pos': getattr(mc_obj, 'abs_pos', 0.0),
+                    'emoji': '⬆',
+                    'house': '',  # MC no está en una casa
+                    'retrograde': False
+                })
+            except Exception:
+                pass
+
     # Planetas regulares
     for planet_name in planet_names:
         if hasattr(subject, planet_name):
