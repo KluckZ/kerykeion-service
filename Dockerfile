@@ -23,5 +23,5 @@ EXPOSE 8000
 # Variable de entorno para puerto (Railway la sobrescribe)
 ENV PORT=8000
 
-# Comando de inicio (usa variable PORT)
-CMD uvicorn app:app --host 0.0.0.0 --port $PORT
+# Comando de inicio (usa shell para expandir variable PORT)
+CMD ["/bin/sh", "-c", "uvicorn app:app --host 0.0.0.0 --port $PORT"]
