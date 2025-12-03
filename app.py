@@ -95,6 +95,58 @@ async def health():
     }
 
 
+@app.get("/debug/attributes")
+async def debug_attributes():
+    """
+    DEBUG: Endpoint temporal para verificar atributos de Kerykeion
+    """
+    try:
+        # Crear sujeto de prueba
+        subject = AstrologicalSubject(
+            name="Debug",
+            year=1990,
+            month=11,
+            day=3,
+            hour=15,
+            minute=30,
+            city="Bogota",
+            lat=4.6097,
+            lon=-74.0817,
+            tz_str="America/Bogota",
+            online=False
+        )
+
+        # Buscar atributos relacionados
+        fortune_attrs = [attr for attr in dir(subject) if 'fortun' in attr.lower()]
+        vertex_attrs = [attr for attr in dir(subject) if 'vertex' in attr.lower()]
+        part_attrs = [attr for attr in dir(subject) if 'part' in attr.lower() or 'pars' in attr.lower()]
+
+        # Intentar acceso directo
+        test_results = {}
+        test_names = ['pars_fortuna', 'part_of_fortune', 'fortune', 'vertex']
+        for name in test_names:
+            if hasattr(subject, name):
+                obj = getattr(subject, name)
+                test_results[name] = {
+                    "exists": True,
+                    "value": str(obj) if obj else None,
+                    "type": str(type(obj))
+                }
+            else:
+                test_results[name] = {"exists": False}
+
+        return {
+            "fortune_related_attrs": fortune_attrs,
+            "vertex_related_attrs": vertex_attrs,
+            "part_related_attrs": part_attrs,
+            "direct_access_tests": test_results,
+            "all_attrs_count": len([a for a in dir(subject) if not a.startswith('_')])
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.post("/calculate")
 async def calculate_chart(birth_data: BirthDataRequest):
     """
