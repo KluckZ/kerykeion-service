@@ -2,6 +2,8 @@
 Kerykeion Microservice - License: AGPL-3.0
 Servicio aislado para cálculos astrológicos usando Kerykeion
 Source: https://github.com/KluckZ/kerykeion-service
+
+Version: 5.3.0+ (con soporte para active_points)
 """
 
 from fastapi import FastAPI, HTTPException
