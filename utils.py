@@ -7,11 +7,12 @@ def extract_planets(subject):
     """Extrae posiciones planetarias del objeto AstrologicalSubject"""
     planets = []
 
-    # Lista de planetas a extraer
+    # Lista de planetas a extraer (nombres en minúsculas como los usa Kerykeion internamente)
     planet_names = [
         'sun', 'moon', 'mercury', 'venus', 'mars',
         'jupiter', 'saturn', 'uranus', 'neptune', 'pluto',
-        'mean_node', 'true_node', 'chiron', 'pars_fortuna', 'vertex'
+        'mean_north_lunar_node', 'true_north_lunar_node',
+        'chiron', 'pars_fortunae', 'vertex', 'anti_vertex'
     ]
 
     # Agregar Lilith (mean_lilith en Kerykeion)

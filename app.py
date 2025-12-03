@@ -158,7 +158,8 @@ async def calculate_chart(birth_data: BirthDataRequest):
     try:
         logger.info(f"Calculando carta natal para: {birth_data.name}")
 
-        # Crear objeto astrológico (ÚNICA llamada a librería AGPL)
+        # Crear objeto astrológico con puntos adicionales activados
+        # IMPORTANTE: Vertex y Pars_Fortunae deben estar en active_points
         subject = AstrologicalSubject(
             name=birth_data.name,
             year=birth_data.year,
@@ -170,7 +171,20 @@ async def calculate_chart(birth_data: BirthDataRequest):
             lng=birth_data.longitude,
             lat=birth_data.latitude,
             tz_str=birth_data.timezone,
-            online=False
+            online=False,
+            active_points=[
+                # Planetas principales
+                "Sun", "Moon", "Mercury", "Venus", "Mars",
+                "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
+                # Nodos lunares
+                "Mean_North_Lunar_Node", "True_North_Lunar_Node",
+                # Puntos especiales
+                "Chiron", "Mean_Lilith",
+                # Arabic Parts
+                "Pars_Fortunae",
+                # Puntos especiales (Vertex y Anti_Vertex)
+                "Vertex", "Anti_Vertex"
+            ]
         )
 
         # Extraer datos calculados a formato JSON limpio
