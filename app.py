@@ -88,10 +88,12 @@ async def root():
 @app.get("/health")
 async def health():
     """Health check endpoint"""
+    import kerykeion
     return {
         "status": "healthy",
         "service": "kerykeion-calculation-service",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "kerykeion_version": kerykeion.__version__ if hasattr(kerykeion, '__version__') else "unknown"
     }
 
 
