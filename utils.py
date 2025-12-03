@@ -10,7 +10,7 @@ def extract_planets(subject):
     # Lista de planetas a extraer
     planet_names = [
         'sun', 'moon', 'mercury', 'venus', 'mars',
-        'jupiter', 'saturn', 'uranus', 'neptuno', 'pluto',
+        'jupiter', 'saturn', 'uranus', 'neptune', 'pluto',
         'mean_node', 'true_node', 'chiron', 'pars_fortuna', 'vertex'
     ]
 
