@@ -111,7 +111,7 @@ async def debug_attributes():
             minute=30,
             city="Bogota",
             lat=4.6097,
-            lon=-74.0817,
+            lng=-74.0817,
             tz_str="America/Bogota",
             online=False
         )
