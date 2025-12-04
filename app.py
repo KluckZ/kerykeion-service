@@ -106,11 +106,12 @@ async def debug_attributes():
     """
     import inspect
     import sys
+    import kerykeion as ker
     try:
         # Información de la versión instalada
         kerykeion_info = {
-            "module_file": kerykeion.__file__ if hasattr(kerykeion, '__file__') else "unknown",
-            "version": kerykeion.__version__ if hasattr(kerykeion, '__version__') else "unknown",
+            "module_file": ker.__file__ if hasattr(ker, '__file__') else "unknown",
+            "version": ker.__version__ if hasattr(ker, '__version__') else "unknown",
             "python_version": sys.version
         }
 
