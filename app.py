@@ -14,6 +14,7 @@ import logging
 
 # Imports de Kerykeion (AGPL-3.0)
 from kerykeion import AstrologicalSubject, KerykeionChartSVG
+from kerykeion.astrological_subject_factory import AstrologicalSubjectFactory
 
 from utils import extract_planets, extract_houses, extract_aspects
 
@@ -180,8 +181,9 @@ async def calculate_chart(birth_data: BirthDataRequest):
         logger.info(f"Calculando carta natal para: {birth_data.name}")
 
         # Crear objeto astrológico con puntos adicionales activados
-        # IMPORTANTE: Vertex y Pars_Fortunae deben estar en active_points
-        subject = AstrologicalSubject(
+        # IMPORTANTE: Usar AstrologicalSubjectFactory.from_birth_data() para active_points
+        # (AstrologicalSubject es un wrapper de compatibilidad que NO soporta active_points)
+        subject = AstrologicalSubjectFactory.from_birth_data(
             name=birth_data.name,
             year=birth_data.year,
             month=birth_data.month,
