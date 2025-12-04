@@ -104,8 +104,21 @@ async def debug_attributes():
     """
     DEBUG: Endpoint temporal para verificar atributos de Kerykeion
     """
+    import inspect
+    import sys
     try:
-        # Crear sujeto de prueba
+        # Información de la versión instalada
+        kerykeion_info = {
+            "module_file": kerykeion.__file__ if hasattr(kerykeion, '__file__') else "unknown",
+            "version": kerykeion.__version__ if hasattr(kerykeion, '__version__') else "unknown",
+            "python_version": sys.version
+        }
+
+        # Verificar signature de AstrologicalSubject.__init__
+        sig = inspect.signature(AstrologicalSubject.__init__)
+        params = list(sig.parameters.keys())
+
+        # Crear sujeto de prueba SIN active_points
         subject = AstrologicalSubject(
             name="Debug",
             year=1990,
@@ -127,7 +140,7 @@ async def debug_attributes():
 
         # Intentar acceso directo
         test_results = {}
-        test_names = ['pars_fortuna', 'part_of_fortune', 'fortune', 'vertex']
+        test_names = ['pars_fortuna', 'part_of_fortune', 'fortune', 'vertex', 'pars_fortunae']
         for name in test_names:
             if hasattr(subject, name):
                 obj = getattr(subject, name)
@@ -140,6 +153,9 @@ async def debug_attributes():
                 test_results[name] = {"exists": False}
 
         return {
+            "kerykeion_info": kerykeion_info,
+            "init_parameters": params,
+            "has_active_points_param": "active_points" in params,
             "fortune_related_attrs": fortune_attrs,
             "vertex_related_attrs": vertex_attrs,
             "part_related_attrs": part_attrs,
