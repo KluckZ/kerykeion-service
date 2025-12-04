@@ -1,7 +1,7 @@
 # Kerykeion Service Dependencies - Updated 2024-12-04
-# IMPORTANTE: Kerykeion 5.3.0+ requerido para active_points parameter
+# IMPORTANTE: Kerykeion 5.3.2 requerido para active_points parameter
 fastapi>=0.115.0
 uvicorn[standard]>=0.30.0
-kerykeion==5.3.0
+kerykeion==5.3.2
 pydantic>=2.9.0
 python-multipart>=0.0.6
