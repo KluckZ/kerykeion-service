@@ -13,9 +13,9 @@ para override completo sin CSS variables.
 # ═══════════════════════════════════════════════════════════
 
 AZTROSOFIA_COLORS = {
-    # Fondos
-    "paper_0": "#0a0e27",               # Azul noche profundo - Fondo principal
-    "paper_1": "#f1f5f9",               # Blanco suave - Texto principal
+    # paper_0 = color de texto/fill principal, paper_1 = fondo del SVG
+    "paper_0": "#f1f5f9",               # Blanco suave - Texto principal
+    "paper_1": "#0a0e27",               # Azul noche profundo - Fondo SVG
 
     # Signos zodiacales - fondo (alternando 2 tonos oscuros)
     "zodiac_bg_0": "#141827",           # Aries
@@ -59,8 +59,8 @@ AZTROSOFIA_COLORS = {
     "houses_radix_line": "#475569",
 
     # Fase lunar
-    "lunar_phase_0": "#f1f5f9",
-    "lunar_phase_1": "#0a0e27",
+    "lunar_phase_0": "#e0e7ff",
+    "lunar_phase_1": "#141827",
 
     # Primer punto de Aries
     "first_point_of_aries": "#8b5cf6",
