@@ -3,7 +3,7 @@ Kerykeion Microservice - License: AGPL-3.0
 Servicio aislado para cálculos astrológicos usando Kerykeion
 Source: https://github.com/KluckZ/kerykeion-service
 
-Version: 5.3.0+ (con soporte para active_points)
+Version: 5.7.2 (ChartDataFactory + ChartDrawer pipeline, custom theme)
 """
 
 from fastapi import FastAPI, HTTPException
@@ -12,11 +12,11 @@ from pydantic import BaseModel, Field
 from typing import Optional
 import logging
 
-# Imports de Kerykeion (AGPL-3.0)
-from kerykeion import AstrologicalSubject, KerykeionChartSVG
-from kerykeion.astrological_subject_factory import AstrologicalSubjectFactory
+# Imports de Kerykeion 5.7.2 (AGPL-3.0)
+from kerykeion import AstrologicalSubjectFactory, ChartDataFactory, ChartDrawer
 
 from utils import extract_planets, extract_houses, extract_aspects
+from aztrosofia_theme import AZTROSOFIA_COLORS, AZTROSOFIA_CELESTIAL_POINTS, AZTROSOFIA_ASPECTS
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -103,25 +103,20 @@ async def health():
 @app.get("/debug/attributes")
 async def debug_attributes():
     """
-    DEBUG: Endpoint temporal para verificar atributos de Kerykeion
+    DEBUG: Endpoint temporal para verificar atributos de Kerykeion 5.7.2
     """
     import inspect
     import sys
     import kerykeion as ker
     try:
-        # Información de la versión instalada
         kerykeion_info = {
             "module_file": ker.__file__ if hasattr(ker, '__file__') else "unknown",
             "version": ker.__version__ if hasattr(ker, '__version__') else "unknown",
             "python_version": sys.version
         }
 
-        # Verificar signature de AstrologicalSubject.__init__
-        sig = inspect.signature(AstrologicalSubject.__init__)
-        params = list(sig.parameters.keys())
-
-        # Crear sujeto de prueba SIN active_points
-        subject = AstrologicalSubject(
+        # Crear sujeto de prueba con la nueva API
+        subject = AstrologicalSubjectFactory.from_birth_data(
             name="Debug",
             year=1990,
             month=11,
@@ -135,33 +130,18 @@ async def debug_attributes():
             online=False
         )
 
-        # Buscar atributos relacionados
+        sig = inspect.signature(AstrologicalSubjectFactory.from_birth_data)
+        params = list(sig.parameters.keys())
+
         fortune_attrs = [attr for attr in dir(subject) if 'fortun' in attr.lower()]
         vertex_attrs = [attr for attr in dir(subject) if 'vertex' in attr.lower()]
-        part_attrs = [attr for attr in dir(subject) if 'part' in attr.lower() or 'pars' in attr.lower()]
-
-        # Intentar acceso directo
-        test_results = {}
-        test_names = ['pars_fortuna', 'part_of_fortune', 'fortune', 'vertex', 'pars_fortunae']
-        for name in test_names:
-            if hasattr(subject, name):
-                obj = getattr(subject, name)
-                test_results[name] = {
-                    "exists": True,
-                    "value": str(obj) if obj else None,
-                    "type": str(type(obj))
-                }
-            else:
-                test_results[name] = {"exists": False}
 
         return {
             "kerykeion_info": kerykeion_info,
-            "init_parameters": params,
+            "factory_parameters": params,
             "has_active_points_param": "active_points" in params,
             "fortune_related_attrs": fortune_attrs,
             "vertex_related_attrs": vertex_attrs,
-            "part_related_attrs": part_attrs,
-            "direct_access_tests": test_results,
             "all_attrs_count": len([a for a in dir(subject) if not a.startswith('_')])
         }
 
@@ -247,69 +227,61 @@ async def calculate_chart(birth_data: BirthDataRequest):
 @app.post("/generate-svg")
 async def generate_svg(request: SVGGenerationRequest):
     """
-    Genera imagen SVG de carta natal
+    Genera imagen SVG de carta natal con tema Aztrosofia oscuro
 
     Returns:
         SVG string de la carta natal
     """
-    import tempfile
-    from pathlib import Path
-
     try:
         logger.info(f"Generando SVG para: {request.name}")
 
-        # Crear directorio temporal
-        with tempfile.TemporaryDirectory() as temp_dir:
-            output_dir = Path(temp_dir)
+        # Crear sujeto astrologico
+        subject = AstrologicalSubjectFactory.from_birth_data(
+            name=request.name,
+            year=request.year,
+            month=request.month,
+            day=request.day,
+            hour=request.hour,
+            minute=request.minute,
+            city=request.city,
+            lng=request.longitude,
+            lat=request.latitude,
+            tz_str=request.timezone,
+            online=False
+        )
 
-            # Crear objeto astrológico
-            subject = AstrologicalSubject(
-                name=request.name,
-                year=request.year,
-                month=request.month,
-                day=request.day,
-                hour=request.hour,
-                minute=request.minute,
-                city=request.city,
-                lng=request.longitude,
-                lat=request.latitude,
-                tz_str=request.timezone,
-                online=False
-            )
+        # Crear datos del chart
+        chart_data = ChartDataFactory.create_natal_chart_data(subject)
 
-            # Generar SVG (guarda en archivo)
-            # Nota: No usamos active_points para mantener configuración por defecto
-            # que incluye nodos y otros puntos. Los aspectos a ángulos se manejan
-            # con disable_aspect_line_filtering si está disponible en la versión de Kerykeion
-            chart = KerykeionChartSVG(
-                subject,
-                chart_type=request.chart_type,
-                new_output_directory=str(output_dir)
-            )
-            chart.makeSVG()
+        # Dibujar con tema Aztrosofia custom
+        drawer = ChartDrawer(
+            chart_data=chart_data,
+            theme=None,
+            colors_settings=AZTROSOFIA_COLORS,
+            celestial_points_settings=AZTROSOFIA_CELESTIAL_POINTS,
+            aspects_settings=AZTROSOFIA_ASPECTS,
+            chart_language="ES",
+            show_aspect_icons=True,
+            show_degree_indicators=True,
+        )
 
-            # Buscar archivo SVG generado
-            svg_files = list(output_dir.glob("*.svg"))
+        # Generar SVG string directamente (sin archivos temporales)
+        # remove_css_variables=True inlinea los colores en el SVG
+        svg_content = drawer.generate_svg_string(
+            minify=True,
+            remove_css_variables=True
+        )
 
-            if not svg_files:
-                raise Exception("No se generó ningún archivo SVG")
+        logger.info(f"SVG generado exitosamente para: {request.name} ({len(svg_content)} bytes)")
 
-            # Leer contenido del SVG
-            svg_file_path = svg_files[0]
-            with open(svg_file_path, 'r', encoding='utf-8') as f:
-                svg_content = f.read()
-
-            logger.info(f"SVG generado exitosamente para: {request.name} ({len(svg_content)} bytes)")
-
-            return {
-                "success": True,
-                "svg": svg_content,
-                "metadata": {
-                    "name": request.name,
-                    "chart_type": request.chart_type,
-                    "filename": svg_file_path.name
-                }
+        return {
+            "success": True,
+            "svg": svg_content,
+            "metadata": {
+                "name": request.name,
+                "chart_type": request.chart_type,
             }
+        }
 
     except Exception as e:
         logger.error(f"Error generando SVG: {str(e)}")
