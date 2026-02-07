@@ -12,8 +12,6 @@ RUN apt-get update && apt-get install -y \
 
 # Instalar dependencias de Python
 COPY requirements.txt .
-# Forzar instalación de Kerykeion 5.3.2 primero
-RUN pip install --no-cache-dir --upgrade kerykeion==5.3.2
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar código
