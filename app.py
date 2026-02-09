@@ -253,13 +253,10 @@ async def generate_svg(request: SVGGenerationRequest):
         # Crear datos del chart
         chart_data = ChartDataFactory.create_natal_chart_data(subject)
 
-        # Dibujar con tema Aztrosofia custom
+        # Dibujar con tema dark nativo para test
         drawer = ChartDrawer(
             chart_data=chart_data,
-            theme=None,
-            colors_settings=AZTROSOFIA_COLORS,
-            celestial_points_settings=AZTROSOFIA_CELESTIAL_POINTS,
-            aspects_settings=AZTROSOFIA_ASPECTS,
+            theme="dark",
             chart_language="ES",
             show_aspect_icons=True,
             show_degree_indicators=True,
