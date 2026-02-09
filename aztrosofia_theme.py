@@ -76,24 +76,24 @@ AZTROSOFIA_CELESTIAL_POINTS = [
     # Planetas principales
     {"id": "Sun", "name": "Sun", "color": "#fbbf24", "element_points": 40, "label": "Su"},
     {"id": "Moon", "name": "Moon", "color": "#e0e7ff", "element_points": 40, "label": "Mo"},
-    {"id": "Mercury", "name": "Mercury", "color": "#22d3ee", "element_points": 15, "label": "Me"},
-    {"id": "Venus", "name": "Venus", "color": "#fb7185", "element_points": 15, "label": "Ve"},
+    {"id": "Mercury", "name": "Mercury", "color": "#eab308", "element_points": 15, "label": "Me"},
+    {"id": "Venus", "name": "Venus", "color": "#22c55e", "element_points": 15, "label": "Ve"},
     {"id": "Mars", "name": "Mars", "color": "#ef4444", "element_points": 15, "label": "Ma"},
-    {"id": "Jupiter", "name": "Jupiter", "color": "#f97316", "element_points": 10, "label": "Ju"},
-    {"id": "Saturn", "name": "Saturn", "color": "#a8855c", "element_points": 10, "label": "Sa"},
-    {"id": "Uranus", "name": "Uranus", "color": "#06b6d4", "element_points": 5, "label": "Ur"},
-    {"id": "Neptune", "name": "Neptune", "color": "#6366f1", "element_points": 5, "label": "Ne"},
-    {"id": "Pluto", "name": "Pluto", "color": "#7c3aed", "element_points": 5, "label": "Pl"},
+    {"id": "Jupiter", "name": "Jupiter", "color": "#06b6d4", "element_points": 10, "label": "Ju"},
+    {"id": "Saturn", "name": "Saturn", "color": "#dc2626", "element_points": 10, "label": "Sa"},
+    {"id": "Uranus", "name": "Uranus", "color": "#3b82f6", "element_points": 5, "label": "Ur"},
+    {"id": "Neptune", "name": "Neptune", "color": "#8b5cf6", "element_points": 5, "label": "Ne"},
+    {"id": "Pluto", "name": "Pluto", "color": "#92400e", "element_points": 5, "label": "Pl"},
 
     # Nodos lunares
-    {"id": "Mean_North_Lunar_Node", "name": "Mean North Lunar Node", "color": "#a78bfa", "element_points": 0, "label": "NN"},
-    {"id": "True_North_Lunar_Node", "name": "True North Lunar Node", "color": "#a78bfa", "element_points": 0, "label": "TN"},
-    {"id": "Mean_South_Lunar_Node", "name": "Mean South Lunar Node", "color": "#a78bfa", "element_points": 0, "label": "SN"},
-    {"id": "True_South_Lunar_Node", "name": "True South Lunar Node", "color": "#a78bfa", "element_points": 0, "label": "TS"},
+    {"id": "Mean_North_Lunar_Node", "name": "Mean North Lunar Node", "color": "#9ca3af", "element_points": 0, "label": "NN"},
+    {"id": "True_North_Lunar_Node", "name": "True North Lunar Node", "color": "#9ca3af", "element_points": 0, "label": "TN"},
+    {"id": "Mean_South_Lunar_Node", "name": "Mean South Lunar Node", "color": "#9ca3af", "element_points": 0, "label": "SN"},
+    {"id": "True_South_Lunar_Node", "name": "True South Lunar Node", "color": "#9ca3af", "element_points": 0, "label": "TS"},
 
     # Puntos especiales
-    {"id": "Chiron", "name": "Chiron", "color": "#f97316", "element_points": 0, "label": "Ch"},
-    {"id": "Mean_Lilith", "name": "Mean Lilith", "color": "#be123c", "element_points": 0, "label": "Li"},
+    {"id": "Chiron", "name": "Chiron", "color": "#93c5fd", "element_points": 0, "label": "Ch"},
+    {"id": "Mean_Lilith", "name": "Mean Lilith", "color": "#c084fc", "element_points": 0, "label": "Li"},
     {"id": "Pars_Fortunae", "name": "Pars Fortunae", "color": "#fbbf24", "element_points": 0, "label": "PF"},
     {"id": "Vertex", "name": "Vertex", "color": "#8b5cf6", "element_points": 0, "label": "Vx"},
     {"id": "Anti_Vertex", "name": "Anti Vertex", "color": "#8b5cf6", "element_points": 0, "label": "AV"},
@@ -105,8 +105,8 @@ AZTROSOFIA_CELESTIAL_POINTS = [
     {"id": "Imum_Coeli", "name": "Imum Coeli", "color": "#cbd5e1", "element_points": 0, "label": "IC"},
 
     # Planetas hipoteticos / extras (Kerykeion incluye ~42 por defecto)
-    {"id": "True_Lilith", "name": "True Lilith", "color": "#be123c", "element_points": 0, "label": "TL"},
-    {"id": "Interpolated_Lilith", "name": "Interpolated Lilith", "color": "#be123c", "element_points": 0, "label": "IL"},
+    {"id": "True_Lilith", "name": "True Lilith", "color": "#c084fc", "element_points": 0, "label": "TL"},
+    {"id": "Interpolated_Lilith", "name": "Interpolated Lilith", "color": "#c084fc", "element_points": 0, "label": "IL"},
     {"id": "Ceres", "name": "Ceres", "color": "#10b981", "element_points": 0, "label": "Ce"},
     {"id": "Pallas", "name": "Pallas", "color": "#22d3ee", "element_points": 0, "label": "Pa"},
     {"id": "Juno", "name": "Juno", "color": "#fb7185", "element_points": 0, "label": "Jn"},
@@ -138,7 +138,7 @@ AZTROSOFIA_ASPECTS = [
     {"degree": 60, "name": "Sextile", "classification": "major", "color": "#10b981"},
     {"degree": 90, "name": "Square", "classification": "major", "color": "#ef4444"},
     {"degree": 120, "name": "Trine", "classification": "major", "color": "#10b981"},
-    {"degree": 180, "name": "Opposition", "classification": "major", "color": "#f97316"},
+    {"degree": 180, "name": "Opposition", "classification": "major", "color": "#ef4444"},
 
     # Aspectos menores
     {"degree": 30, "name": "Semi-Sextile", "classification": "minor", "color": "#a78bfa"},
