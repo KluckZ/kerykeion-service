@@ -266,6 +266,13 @@ async def generate_svg(request: SVGGenerationRequest):
         # (theme=None deja el <style> vacio, los var() quedan sin definir)
         drawer.color_style_tag = AZTROSOFIA_CSS
 
+        # Filtrar aspectos a angulos (no dibujar lineas a ASC/MC/DSC/IC)
+        ANGLES = {"Ascendant", "Medium_Coeli", "Descendant", "Imum_Coeli"}
+        drawer.aspects_list = [
+            a for a in drawer.aspects_list
+            if a["p1_name"] not in ANGLES and a["p2_name"] not in ANGLES
+        ]
+
         # Generar SVG string directamente (sin archivos temporales)
         # remove_css_variables=True inlinea los colores en el SVG
         svg_content = drawer.generate_svg_string(

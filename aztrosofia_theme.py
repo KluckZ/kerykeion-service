@@ -19,33 +19,33 @@ AZTROSOFIA_COLORS = {
     "paper_0": "#1e293b",               # Texto oscuro (slate 800)
     "paper_1": "#ffffff",               # Fondo blanco
 
-    # Signos zodiacales - fondo blanco
-    "zodiac_bg_0": "#ffffff",           # Aries
-    "zodiac_bg_1": "#f8fafc",           # Tauro
-    "zodiac_bg_2": "#ffffff",           # Geminis
-    "zodiac_bg_3": "#f8fafc",           # Cancer
-    "zodiac_bg_4": "#ffffff",           # Leo
-    "zodiac_bg_5": "#f8fafc",           # Virgo
-    "zodiac_bg_6": "#ffffff",           # Libra
-    "zodiac_bg_7": "#f8fafc",           # Escorpio
-    "zodiac_bg_8": "#ffffff",           # Sagitario
-    "zodiac_bg_9": "#f8fafc",           # Capricornio
-    "zodiac_bg_10": "#ffffff",          # Acuario
-    "zodiac_bg_11": "#f8fafc",          # Piscis
+    # Signos zodiacales - fondo por elemento
+    "zodiac_bg_0": "#ef4444",           # Aries - Fuego
+    "zodiac_bg_1": "#10b981",           # Tauro - Tierra
+    "zodiac_bg_2": "#fbbf24",           # Geminis - Aire
+    "zodiac_bg_3": "#60a5fa",           # Cancer - Agua
+    "zodiac_bg_4": "#ef4444",           # Leo - Fuego
+    "zodiac_bg_5": "#10b981",           # Virgo - Tierra
+    "zodiac_bg_6": "#fbbf24",           # Libra - Aire
+    "zodiac_bg_7": "#60a5fa",           # Escorpio - Agua
+    "zodiac_bg_8": "#ef4444",           # Sagitario - Fuego
+    "zodiac_bg_9": "#10b981",           # Capricornio - Tierra
+    "zodiac_bg_10": "#fbbf24",          # Acuario - Aire
+    "zodiac_bg_11": "#60a5fa",          # Piscis - Agua
 
-    # Signos zodiacales - iconos por elemento
-    "zodiac_icon_0": "#ef4444",         # Aries - Rojo fuego
-    "zodiac_icon_1": "#10b981",         # Tauro - Verde tierra
-    "zodiac_icon_2": "#fbbf24",         # Geminis - Dorado aire
-    "zodiac_icon_3": "#60a5fa",         # Cancer - Azul agua
-    "zodiac_icon_4": "#ef4444",         # Leo - Rojo fuego
-    "zodiac_icon_5": "#10b981",         # Virgo - Verde tierra
-    "zodiac_icon_6": "#fbbf24",         # Libra - Dorado aire
-    "zodiac_icon_7": "#60a5fa",         # Escorpio - Azul agua
-    "zodiac_icon_8": "#ef4444",         # Sagitario - Rojo fuego
-    "zodiac_icon_9": "#10b981",         # Capricornio - Verde tierra
-    "zodiac_icon_10": "#fbbf24",        # Acuario - Dorado aire
-    "zodiac_icon_11": "#60a5fa",        # Piscis - Azul agua
+    # Signos zodiacales - glifos negros
+    "zodiac_icon_0": "#000000",         # Aries
+    "zodiac_icon_1": "#000000",         # Tauro
+    "zodiac_icon_2": "#000000",         # Geminis
+    "zodiac_icon_3": "#000000",         # Cancer
+    "zodiac_icon_4": "#000000",         # Leo
+    "zodiac_icon_5": "#000000",         # Virgo
+    "zodiac_icon_6": "#000000",         # Libra
+    "zodiac_icon_7": "#000000",         # Escorpio
+    "zodiac_icon_8": "#000000",         # Sagitario
+    "zodiac_icon_9": "#000000",         # Capricornio
+    "zodiac_icon_10": "#000000",        # Acuario
+    "zodiac_icon_11": "#000000",        # Piscis
 
     # Anillos
     "zodiac_radix_ring_0": "#cbd5e1",   # Anillo exterior (slate 300)
@@ -78,15 +78,15 @@ AZTROSOFIA_COLORS = {
 AZTROSOFIA_CELESTIAL_POINTS = [
     # Planetas principales (indices 0-9)
     {"id": 0, "name": "Sun", "color": "#fbbf24", "element_points": 40, "label": "Sun"},
-    {"id": 1, "name": "Moon", "color": "#e0e7ff", "element_points": 40, "label": "Moon"},
-    {"id": 2, "name": "Mercury", "color": "#eab308", "element_points": 15, "label": "Mercury"},
+    {"id": 1, "name": "Moon", "color": "#94a3b8", "element_points": 40, "label": "Moon"},
+    {"id": 2, "name": "Mercury", "color": "#ca8a04", "element_points": 15, "label": "Mercury"},
     {"id": 3, "name": "Venus", "color": "#22c55e", "element_points": 15, "label": "Venus"},
     {"id": 4, "name": "Mars", "color": "#ef4444", "element_points": 15, "label": "Mars"},
     {"id": 5, "name": "Jupiter", "color": "#06b6d4", "element_points": 10, "label": "Jupiter"},
     {"id": 6, "name": "Saturn", "color": "#dc2626", "element_points": 10, "label": "Saturn"},
-    {"id": 7, "name": "Uranus", "color": "#3b82f6", "element_points": 10, "label": "Uranus"},
-    {"id": 8, "name": "Neptune", "color": "#8b5cf6", "element_points": 10, "label": "Neptune"},
-    {"id": 9, "name": "Pluto", "color": "#92400e", "element_points": 10, "label": "Pluto"},
+    {"id": 7, "name": "Uranus", "color": "#4f46e5", "element_points": 10, "label": "Uranus"},
+    {"id": 8, "name": "Neptune", "color": "#7c3aed", "element_points": 10, "label": "Neptune"},
+    {"id": 9, "name": "Pluto", "color": "#78350f", "element_points": 10, "label": "Pluto"},
 
     # Nodos lunares (indices 10-11)
     {"id": 10, "name": "Mean_North_Lunar_Node", "color": "#9ca3af", "element_points": 0, "label": "Mean_North_Lunar_Node"},
@@ -181,30 +181,30 @@ AZTROSOFIA_CSS = """:root {
     /* Main Colors */
     --kerykeion-chart-color-paper-0: #1e293b;
     --kerykeion-chart-color-paper-1: #ffffff;
-    --kerykeion-chart-color-zodiac-bg-0: #ffffff;
-    --kerykeion-chart-color-zodiac-bg-1: #f8fafc;
-    --kerykeion-chart-color-zodiac-bg-2: #ffffff;
-    --kerykeion-chart-color-zodiac-bg-3: #f8fafc;
-    --kerykeion-chart-color-zodiac-bg-4: #ffffff;
-    --kerykeion-chart-color-zodiac-bg-5: #f8fafc;
-    --kerykeion-chart-color-zodiac-bg-6: #ffffff;
-    --kerykeion-chart-color-zodiac-bg-7: #f8fafc;
-    --kerykeion-chart-color-zodiac-bg-8: #ffffff;
-    --kerykeion-chart-color-zodiac-bg-9: #f8fafc;
-    --kerykeion-chart-color-zodiac-bg-10: #ffffff;
-    --kerykeion-chart-color-zodiac-bg-11: #f8fafc;
-    --kerykeion-chart-color-zodiac-icon-0: #ef4444;
-    --kerykeion-chart-color-zodiac-icon-1: #10b981;
-    --kerykeion-chart-color-zodiac-icon-2: #fbbf24;
-    --kerykeion-chart-color-zodiac-icon-3: #60a5fa;
-    --kerykeion-chart-color-zodiac-icon-4: #ef4444;
-    --kerykeion-chart-color-zodiac-icon-5: #10b981;
-    --kerykeion-chart-color-zodiac-icon-6: #fbbf24;
-    --kerykeion-chart-color-zodiac-icon-7: #60a5fa;
-    --kerykeion-chart-color-zodiac-icon-8: #ef4444;
-    --kerykeion-chart-color-zodiac-icon-9: #10b981;
-    --kerykeion-chart-color-zodiac-icon-10: #fbbf24;
-    --kerykeion-chart-color-zodiac-icon-11: #60a5fa;
+    --kerykeion-chart-color-zodiac-bg-0: #ef4444;
+    --kerykeion-chart-color-zodiac-bg-1: #10b981;
+    --kerykeion-chart-color-zodiac-bg-2: #fbbf24;
+    --kerykeion-chart-color-zodiac-bg-3: #60a5fa;
+    --kerykeion-chart-color-zodiac-bg-4: #ef4444;
+    --kerykeion-chart-color-zodiac-bg-5: #10b981;
+    --kerykeion-chart-color-zodiac-bg-6: #fbbf24;
+    --kerykeion-chart-color-zodiac-bg-7: #60a5fa;
+    --kerykeion-chart-color-zodiac-bg-8: #ef4444;
+    --kerykeion-chart-color-zodiac-bg-9: #10b981;
+    --kerykeion-chart-color-zodiac-bg-10: #fbbf24;
+    --kerykeion-chart-color-zodiac-bg-11: #60a5fa;
+    --kerykeion-chart-color-zodiac-icon-0: #000000;
+    --kerykeion-chart-color-zodiac-icon-1: #000000;
+    --kerykeion-chart-color-zodiac-icon-2: #000000;
+    --kerykeion-chart-color-zodiac-icon-3: #000000;
+    --kerykeion-chart-color-zodiac-icon-4: #000000;
+    --kerykeion-chart-color-zodiac-icon-5: #000000;
+    --kerykeion-chart-color-zodiac-icon-6: #000000;
+    --kerykeion-chart-color-zodiac-icon-7: #000000;
+    --kerykeion-chart-color-zodiac-icon-8: #000000;
+    --kerykeion-chart-color-zodiac-icon-9: #000000;
+    --kerykeion-chart-color-zodiac-icon-10: #000000;
+    --kerykeion-chart-color-zodiac-icon-11: #000000;
     --kerykeion-chart-color-zodiac-radix-ring-0: #cbd5e1;
     --kerykeion-chart-color-zodiac-radix-ring-1: #e2e8f0;
     --kerykeion-chart-color-zodiac-radix-ring-2: #cbd5e1;
@@ -232,15 +232,15 @@ AZTROSOFIA_CSS = """:root {
 
     /* Planets */
     --kerykeion-chart-color-sun: #fbbf24;
-    --kerykeion-chart-color-moon: #6366f1;
-    --kerykeion-chart-color-mercury: #eab308;
+    --kerykeion-chart-color-moon: #94a3b8;
+    --kerykeion-chart-color-mercury: #ca8a04;
     --kerykeion-chart-color-venus: #22c55e;
     --kerykeion-chart-color-mars: #ef4444;
     --kerykeion-chart-color-jupiter: #06b6d4;
     --kerykeion-chart-color-saturn: #dc2626;
-    --kerykeion-chart-color-uranus: #3b82f6;
-    --kerykeion-chart-color-neptune: #8b5cf6;
-    --kerykeion-chart-color-pluto: #92400e;
+    --kerykeion-chart-color-uranus: #4f46e5;
+    --kerykeion-chart-color-neptune: #7c3aed;
+    --kerykeion-chart-color-pluto: #78350f;
     --kerykeion-chart-color-mean-node: #9ca3af;
     --kerykeion-chart-color-true-node: #9ca3af;
     --kerykeion-chart-color-chiron: #93c5fd;
