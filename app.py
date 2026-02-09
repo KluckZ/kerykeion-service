@@ -235,7 +235,7 @@ async def generate_svg(request: SVGGenerationRequest):
     try:
         logger.info(f"Generando SVG para: {request.name}")
 
-        # Crear sujeto astrologico
+        # Crear sujeto astrologico con puntos adicionales (Vertex, Pars Fortunae)
         subject = AstrologicalSubjectFactory.from_birth_data(
             name=request.name,
             year=request.year,
@@ -247,7 +247,15 @@ async def generate_svg(request: SVGGenerationRequest):
             lng=request.longitude,
             lat=request.latitude,
             tz_str=request.timezone,
-            online=False
+            online=False,
+            active_points=[
+                "Sun", "Moon", "Mercury", "Venus", "Mars",
+                "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
+                "True_North_Lunar_Node", "True_South_Lunar_Node",
+                "Chiron", "Mean_Lilith",
+                "Ascendant", "Medium_Coeli", "Descendant", "Imum_Coeli",
+                "Pars_Fortunae", "Vertex",
+            ]
         )
 
         # Crear datos del chart
@@ -279,6 +287,14 @@ async def generate_svg(request: SVGGenerationRequest):
             minify=True,
             remove_css_variables=True
         )
+
+        # Post-process SVG:
+        # 1. Zodiac slices: full color (library hardcodes fill-opacity: 0.5)
+        svg_content = svg_content.replace('fill-opacity: 0.5;', 'fill-opacity: 1;')
+        # 2. Second circle (planet area): fully opaque white (library hardcodes .2)
+        svg_content = svg_content.replace('fill-opacity:.2;', 'fill-opacity:1;')
+        # 3. Third circle (aspect area): fully opaque white (library hardcodes .8)
+        svg_content = svg_content.replace('fill-opacity:.8;', 'fill-opacity:1;')
 
         logger.info(f"SVG generado exitosamente para: {request.name} ({len(svg_content)} bytes)")
 

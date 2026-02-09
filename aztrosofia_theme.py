@@ -19,19 +19,19 @@ AZTROSOFIA_COLORS = {
     "paper_0": "#1e293b",               # Texto oscuro (slate 800)
     "paper_1": "#ffffff",               # Fondo blanco
 
-    # Signos zodiacales - fondo por elemento
-    "zodiac_bg_0": "#ef4444",           # Aries - Fuego
-    "zodiac_bg_1": "#10b981",           # Tauro - Tierra
-    "zodiac_bg_2": "#fbbf24",           # Geminis - Aire
-    "zodiac_bg_3": "#60a5fa",           # Cancer - Agua
-    "zodiac_bg_4": "#ef4444",           # Leo - Fuego
-    "zodiac_bg_5": "#10b981",           # Virgo - Tierra
-    "zodiac_bg_6": "#fbbf24",           # Libra - Aire
-    "zodiac_bg_7": "#60a5fa",           # Escorpio - Agua
-    "zodiac_bg_8": "#ef4444",           # Sagitario - Fuego
-    "zodiac_bg_9": "#10b981",           # Capricornio - Tierra
-    "zodiac_bg_10": "#fbbf24",          # Acuario - Aire
-    "zodiac_bg_11": "#60a5fa",          # Piscis - Agua
+    # Signos zodiacales - fondo por elemento (colores fuertes)
+    "zodiac_bg_0": "#dc2626",           # Aries - Fuego
+    "zodiac_bg_1": "#059669",           # Tauro - Tierra
+    "zodiac_bg_2": "#d97706",           # Geminis - Aire
+    "zodiac_bg_3": "#2563eb",           # Cancer - Agua
+    "zodiac_bg_4": "#dc2626",           # Leo - Fuego
+    "zodiac_bg_5": "#059669",           # Virgo - Tierra
+    "zodiac_bg_6": "#d97706",           # Libra - Aire
+    "zodiac_bg_7": "#2563eb",           # Escorpio - Agua
+    "zodiac_bg_8": "#dc2626",           # Sagitario - Fuego
+    "zodiac_bg_9": "#059669",           # Capricornio - Tierra
+    "zodiac_bg_10": "#d97706",          # Acuario - Aire
+    "zodiac_bg_11": "#2563eb",          # Piscis - Agua
 
     # Signos zodiacales - glifos negros
     "zodiac_icon_0": "#000000",         # Aries
@@ -181,18 +181,18 @@ AZTROSOFIA_CSS = """:root {
     /* Main Colors */
     --kerykeion-chart-color-paper-0: #1e293b;
     --kerykeion-chart-color-paper-1: #ffffff;
-    --kerykeion-chart-color-zodiac-bg-0: #ef4444;
-    --kerykeion-chart-color-zodiac-bg-1: #10b981;
-    --kerykeion-chart-color-zodiac-bg-2: #fbbf24;
-    --kerykeion-chart-color-zodiac-bg-3: #60a5fa;
-    --kerykeion-chart-color-zodiac-bg-4: #ef4444;
-    --kerykeion-chart-color-zodiac-bg-5: #10b981;
-    --kerykeion-chart-color-zodiac-bg-6: #fbbf24;
-    --kerykeion-chart-color-zodiac-bg-7: #60a5fa;
-    --kerykeion-chart-color-zodiac-bg-8: #ef4444;
-    --kerykeion-chart-color-zodiac-bg-9: #10b981;
-    --kerykeion-chart-color-zodiac-bg-10: #fbbf24;
-    --kerykeion-chart-color-zodiac-bg-11: #60a5fa;
+    --kerykeion-chart-color-zodiac-bg-0: #dc2626;
+    --kerykeion-chart-color-zodiac-bg-1: #059669;
+    --kerykeion-chart-color-zodiac-bg-2: #d97706;
+    --kerykeion-chart-color-zodiac-bg-3: #2563eb;
+    --kerykeion-chart-color-zodiac-bg-4: #dc2626;
+    --kerykeion-chart-color-zodiac-bg-5: #059669;
+    --kerykeion-chart-color-zodiac-bg-6: #d97706;
+    --kerykeion-chart-color-zodiac-bg-7: #2563eb;
+    --kerykeion-chart-color-zodiac-bg-8: #dc2626;
+    --kerykeion-chart-color-zodiac-bg-9: #059669;
+    --kerykeion-chart-color-zodiac-bg-10: #d97706;
+    --kerykeion-chart-color-zodiac-bg-11: #2563eb;
     --kerykeion-chart-color-zodiac-icon-0: #000000;
     --kerykeion-chart-color-zodiac-icon-1: #000000;
     --kerykeion-chart-color-zodiac-icon-2: #000000;
