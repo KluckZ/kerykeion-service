@@ -261,8 +261,6 @@ async def generate_svg(request: SVGGenerationRequest):
             celestial_points_settings=AZTROSOFIA_CELESTIAL_POINTS,
             aspects_settings=AZTROSOFIA_ASPECTS,
             chart_language="ES",
-            show_aspect_icons=True,
-            show_degree_indicators=True,
         )
 
         # Generar SVG string directamente (sin archivos temporales)
