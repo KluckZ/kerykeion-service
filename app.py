@@ -288,13 +288,20 @@ async def generate_svg(request: SVGGenerationRequest):
             remove_css_variables=True
         )
 
-        # Post-process SVG:
-        # 1. Zodiac slices: full color (library hardcodes fill-opacity: 0.5)
-        svg_content = svg_content.replace('fill-opacity: 0.5;', 'fill-opacity: 1;')
-        # 2. Second circle (planet area): fully opaque white (library hardcodes .2)
-        svg_content = svg_content.replace('fill-opacity:.2;', 'fill-opacity:1;')
-        # 3. Third circle (aspect area): fully opaque white (library hardcodes .8)
-        svg_content = svg_content.replace('fill-opacity:.8;', 'fill-opacity:1;')
+        # Post-process SVG to make zodiac strip opaque and inner area white.
+        # scourString converts inline styles to presentation attributes, so we
+        # need to handle both formats:
+        #   inline style: fill-opacity:.2;   (before scour)
+        #   presentation:  fill-opacity='.2' (after scour + quote replace)
+        for val in ['.5', '0.5']:  # zodiac slices (library hardcodes 0.5)
+            svg_content = svg_content.replace(f'fill-opacity:{val};', 'fill-opacity:1;')
+            svg_content = svg_content.replace(f"fill-opacity='{val}'", "fill-opacity='1'")
+        for val in ['.2', '0.2']:  # second circle - planet area
+            svg_content = svg_content.replace(f'fill-opacity:{val};', 'fill-opacity:1;')
+            svg_content = svg_content.replace(f"fill-opacity='{val}'", "fill-opacity='1'")
+        for val in ['.8', '0.8']:  # third circle - aspect area
+            svg_content = svg_content.replace(f'fill-opacity:{val};', 'fill-opacity:1;')
+            svg_content = svg_content.replace(f"fill-opacity='{val}'", "fill-opacity='1'")
 
         logger.info(f"SVG generado exitosamente para: {request.name} ({len(svg_content)} bytes)")
 

@@ -19,19 +19,19 @@ AZTROSOFIA_COLORS = {
     "paper_0": "#1e293b",               # Texto oscuro (slate 800)
     "paper_1": "#ffffff",               # Fondo blanco
 
-    # Signos zodiacales - fondo por elemento (colores fuertes)
-    "zodiac_bg_0": "#dc2626",           # Aries - Fuego
-    "zodiac_bg_1": "#059669",           # Tauro - Tierra
-    "zodiac_bg_2": "#d97706",           # Geminis - Aire
-    "zodiac_bg_3": "#2563eb",           # Cancer - Agua
-    "zodiac_bg_4": "#dc2626",           # Leo - Fuego
-    "zodiac_bg_5": "#059669",           # Virgo - Tierra
-    "zodiac_bg_6": "#d97706",           # Libra - Aire
-    "zodiac_bg_7": "#2563eb",           # Escorpio - Agua
-    "zodiac_bg_8": "#dc2626",           # Sagitario - Fuego
-    "zodiac_bg_9": "#059669",           # Capricornio - Tierra
-    "zodiac_bg_10": "#d97706",          # Acuario - Aire
-    "zodiac_bg_11": "#2563eb",          # Piscis - Agua
+    # Signos zodiacales - fondo por elemento (colores vivos)
+    "zodiac_bg_0": "#b91c1c",           # Aries - Fuego (red-700)
+    "zodiac_bg_1": "#047857",           # Tauro - Tierra (emerald-700)
+    "zodiac_bg_2": "#b45309",           # Geminis - Aire (amber-700)
+    "zodiac_bg_3": "#1d4ed8",           # Cancer - Agua (blue-700)
+    "zodiac_bg_4": "#b91c1c",           # Leo - Fuego
+    "zodiac_bg_5": "#047857",           # Virgo - Tierra
+    "zodiac_bg_6": "#b45309",           # Libra - Aire
+    "zodiac_bg_7": "#1d4ed8",           # Escorpio - Agua
+    "zodiac_bg_8": "#b91c1c",           # Sagitario - Fuego
+    "zodiac_bg_9": "#047857",           # Capricornio - Tierra
+    "zodiac_bg_10": "#b45309",          # Acuario - Aire
+    "zodiac_bg_11": "#1d4ed8",          # Piscis - Agua
 
     # Signos zodiacales - glifos negros
     "zodiac_icon_0": "#000000",         # Aries
@@ -102,14 +102,14 @@ AZTROSOFIA_CELESTIAL_POINTS = [
     {"id": 16, "name": "Imum_Coeli", "color": "#cbd5e1", "element_points": 0, "label": "Ic"},
 
     # Lilith (index 17)
-    {"id": 17, "name": "Mean_Lilith", "color": "#c084fc", "element_points": 0, "label": "Mean_Lilith"},
+    {"id": 17, "name": "Mean_Lilith", "color": "#000000", "element_points": 0, "label": "Mean_Lilith"},
 
     # Nodos Sur (indices 18-19)
     {"id": 18, "name": "Mean_South_Lunar_Node", "color": "#9ca3af", "element_points": 0, "label": "Mean_South_Lunar_Node"},
     {"id": 19, "name": "True_South_Lunar_Node", "color": "#9ca3af", "element_points": 0, "label": "True_South_Lunar_Node"},
 
     # Lilith verdadera (index 20)
-    {"id": 20, "name": "True_Lilith", "color": "#c084fc", "element_points": 0, "label": "True_Lilith"},
+    {"id": 20, "name": "True_Lilith", "color": "#000000", "element_points": 0, "label": "True_Lilith"},
 
     # Earth (index 21)
     {"id": 21, "name": "Earth", "color": "#10b981", "element_points": 0, "label": "Earth"},
@@ -135,14 +135,14 @@ AZTROSOFIA_CELESTIAL_POINTS = [
     {"id": 35, "name": "Spica", "color": "#10b981", "element_points": 0, "label": "Spica"},
 
     # Arabic Parts (indices 36-39)
-    {"id": 36, "name": "Pars_Fortunae", "color": "#fbbf24", "element_points": 5, "label": "Fortune"},
+    {"id": 36, "name": "Pars_Fortunae", "color": "#000000", "element_points": 5, "label": "Fortune"},
     {"id": 37, "name": "Pars_Spiritus", "color": "#8b5cf6", "element_points": 0, "label": "Spirit"},
     {"id": 38, "name": "Pars_Amoris", "color": "#fb7185", "element_points": 0, "label": "Love"},
     {"id": 39, "name": "Pars_Fidei", "color": "#06b6d4", "element_points": 0, "label": "Faith"},
 
     # Vertex (indices 40-41)
-    {"id": 40, "name": "Vertex", "color": "#8b5cf6", "element_points": 0, "label": "Vertex"},
-    {"id": 41, "name": "Anti_Vertex", "color": "#8b5cf6", "element_points": 0, "label": "Anti_Vertex"},
+    {"id": 40, "name": "Vertex", "color": "#000000", "element_points": 0, "label": "Vertex"},
+    {"id": 41, "name": "Anti_Vertex", "color": "#000000", "element_points": 0, "label": "Anti_Vertex"},
 ]
 
 
@@ -181,18 +181,18 @@ AZTROSOFIA_CSS = """:root {
     /* Main Colors */
     --kerykeion-chart-color-paper-0: #1e293b;
     --kerykeion-chart-color-paper-1: #ffffff;
-    --kerykeion-chart-color-zodiac-bg-0: #dc2626;
-    --kerykeion-chart-color-zodiac-bg-1: #059669;
-    --kerykeion-chart-color-zodiac-bg-2: #d97706;
-    --kerykeion-chart-color-zodiac-bg-3: #2563eb;
-    --kerykeion-chart-color-zodiac-bg-4: #dc2626;
-    --kerykeion-chart-color-zodiac-bg-5: #059669;
-    --kerykeion-chart-color-zodiac-bg-6: #d97706;
-    --kerykeion-chart-color-zodiac-bg-7: #2563eb;
-    --kerykeion-chart-color-zodiac-bg-8: #dc2626;
-    --kerykeion-chart-color-zodiac-bg-9: #059669;
-    --kerykeion-chart-color-zodiac-bg-10: #d97706;
-    --kerykeion-chart-color-zodiac-bg-11: #2563eb;
+    --kerykeion-chart-color-zodiac-bg-0: #b91c1c;
+    --kerykeion-chart-color-zodiac-bg-1: #047857;
+    --kerykeion-chart-color-zodiac-bg-2: #b45309;
+    --kerykeion-chart-color-zodiac-bg-3: #1d4ed8;
+    --kerykeion-chart-color-zodiac-bg-4: #b91c1c;
+    --kerykeion-chart-color-zodiac-bg-5: #047857;
+    --kerykeion-chart-color-zodiac-bg-6: #b45309;
+    --kerykeion-chart-color-zodiac-bg-7: #1d4ed8;
+    --kerykeion-chart-color-zodiac-bg-8: #b91c1c;
+    --kerykeion-chart-color-zodiac-bg-9: #047857;
+    --kerykeion-chart-color-zodiac-bg-10: #b45309;
+    --kerykeion-chart-color-zodiac-bg-11: #1d4ed8;
     --kerykeion-chart-color-zodiac-icon-0: #000000;
     --kerykeion-chart-color-zodiac-icon-1: #000000;
     --kerykeion-chart-color-zodiac-icon-2: #000000;
@@ -248,15 +248,15 @@ AZTROSOFIA_CSS = """:root {
     --kerykeion-chart-color-tenth-house: #64748b;
     --kerykeion-chart-color-seventh-house: #64748b;
     --kerykeion-chart-color-fourth-house: #64748b;
-    --kerykeion-chart-color-mean-lilith: #c084fc;
-    --kerykeion-chart-color-true-lilith: #c084fc;
+    --kerykeion-chart-color-mean-lilith: #000000;
+    --kerykeion-chart-color-true-lilith: #000000;
     --kerykeion-chart-color-ceres: #10b981;
     --kerykeion-chart-color-pallas: #22d3ee;
     --kerykeion-chart-color-juno: #fb7185;
     --kerykeion-chart-color-vesta: #ef4444;
-    --kerykeion-chart-color-pars-fortunae: #fbbf24;
-    --kerykeion-chart-color-vertex: #8b5cf6;
-    --kerykeion-chart-color-east-point: #8b5cf6;
+    --kerykeion-chart-color-pars-fortunae: #000000;
+    --kerykeion-chart-color-vertex: #000000;
+    --kerykeion-chart-color-east-point: #000000;
     --kerykeion-chart-color-eris: #7c3aed;
     --kerykeion-chart-color-earth: #10b981;
     --kerykeion-chart-color-pholus: #f97316;
@@ -268,7 +268,7 @@ AZTROSOFIA_CSS = """:root {
     --kerykeion-chart-color-quaoar: #a78bfa;
     --kerykeion-chart-color-regulus: #fbbf24;
     --kerykeion-chart-color-spica: #10b981;
-    --kerykeion-chart-color-anti-vertex: #8b5cf6;
+    --kerykeion-chart-color-anti-vertex: #000000;
 
     /* Arab Parts */
     --kerykeion-chart-color-pars-spiritus: #8b5cf6;
