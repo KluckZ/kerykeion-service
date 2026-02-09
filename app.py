@@ -16,7 +16,7 @@ import logging
 from kerykeion import AstrologicalSubjectFactory, ChartDataFactory, ChartDrawer
 
 from utils import extract_planets, extract_houses, extract_aspects
-from aztrosofia_theme import AZTROSOFIA_COLORS, AZTROSOFIA_CELESTIAL_POINTS, AZTROSOFIA_ASPECTS
+from aztrosofia_theme import AZTROSOFIA_COLORS, AZTROSOFIA_CELESTIAL_POINTS, AZTROSOFIA_ASPECTS, AZTROSOFIA_CSS
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -262,6 +262,9 @@ async def generate_svg(request: SVGGenerationRequest):
             aspects_settings=AZTROSOFIA_ASPECTS,
             chart_language="ES",
         )
+        # Inyectar CSS custom para que los glifos SVG tengan color
+        # (theme=None deja el <style> vacio, los var() quedan sin definir)
+        drawer.color_style_tag = AZTROSOFIA_CSS
 
         # Generar SVG string directamente (sin archivos temporales)
         # remove_css_variables=True inlinea los colores en el SVG
