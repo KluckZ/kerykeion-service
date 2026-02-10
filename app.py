@@ -16,7 +16,10 @@ import logging
 from kerykeion import AstrologicalSubjectFactory, ChartDataFactory, ChartDrawer
 
 from utils import extract_planets, extract_houses, extract_aspects
-from aztrosofia_theme import AZTROSOFIA_COLORS, AZTROSOFIA_CELESTIAL_POINTS, AZTROSOFIA_ASPECTS, AZTROSOFIA_CSS
+from aztrosofia_theme import (
+    AZTROSOFIA_COLORS, AZTROSOFIA_CELESTIAL_POINTS, AZTROSOFIA_ASPECTS, AZTROSOFIA_CSS,
+    build_theme_from_config,
+)
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -65,6 +68,7 @@ class SVGGenerationRequest(BaseModel):
     city: str
     timezone: str
     chart_type: Optional[str] = "Natal"
+    colors: Optional[dict] = None
 
 
 @app.get("/")
@@ -261,18 +265,28 @@ async def generate_svg(request: SVGGenerationRequest):
         # Crear datos del chart
         chart_data = ChartDataFactory.create_natal_chart_data(subject)
 
+        # Build theme: use admin colors if provided, otherwise hardcoded defaults
+        if request.colors:
+            logger.info("Using custom colors from request")
+            colors_s, celestial_s, aspects_s, css_s = build_theme_from_config(request.colors)
+        else:
+            colors_s = AZTROSOFIA_COLORS
+            celestial_s = AZTROSOFIA_CELESTIAL_POINTS
+            aspects_s = AZTROSOFIA_ASPECTS
+            css_s = AZTROSOFIA_CSS
+
         # Dibujar con tema Aztrosofia custom
         drawer = ChartDrawer(
             chart_data=chart_data,
             theme=None,
-            colors_settings=AZTROSOFIA_COLORS,
-            celestial_points_settings=AZTROSOFIA_CELESTIAL_POINTS,
-            aspects_settings=AZTROSOFIA_ASPECTS,
+            colors_settings=colors_s,
+            celestial_points_settings=celestial_s,
+            aspects_settings=aspects_s,
             chart_language="ES",
         )
         # Inyectar CSS custom para que los glifos SVG tengan color
         # (theme=None deja el <style> vacio, los var() quedan sin definir)
-        drawer.color_style_tag = AZTROSOFIA_CSS
+        drawer.color_style_tag = css_s
 
         # Filtrar aspectos a angulos (no dibujar lineas a ASC/MC/DSC/IC)
         ANGLES = {"Ascendant", "Medium_Coeli", "Descendant", "Imum_Coeli"}

@@ -290,3 +290,218 @@ AZTROSOFIA_CSS = """:root {
     --kerykeion-chart-color-house-number: #94a3b8;
 }
 """
+
+
+# ═══════════════════════════════════════════════════════════
+# DEFAULT CONFIG - Simplified JSON format matching system_config
+# Used as fallback when no colors are passed from admin
+# ═══════════════════════════════════════════════════════════
+
+DEFAULT_CHART_COLORS_CONFIG = {
+    "planets": {
+        "sun": "#fbbf24", "moon": "#94a3b8", "mercury": "#ca8a04",
+        "venus": "#15803d", "mars": "#ef4444", "jupiter": "#06b6d4",
+        "saturn": "#dc2626", "uranus": "#3730a3", "neptune": "#6d28d9",
+        "pluto": "#78350f", "chiron": "#93c5fd", "mean_lilith": "#000000",
+        "true_lilith": "#000000", "north_node": "#9ca3af", "south_node": "#9ca3af",
+        "pars_fortunae": "#000000", "vertex": "#000000", "anti_vertex": "#000000",
+    },
+    "aspects": {
+        "conjunction": "#60a5fa", "sextile": "#10b981", "square": "#ef4444",
+        "trine": "#10b981", "opposition": "#ef4444", "semi-sextile": "#a78bfa",
+        "semi-square": "#fbbf24", "quintile": "#34d399", "sesquiquadrate": "#fb923c",
+        "biquintile": "#34d399", "quincunx": "#c084fc",
+    },
+    "zodiac_elements": {
+        "fire": "#dc2626", "earth": "#059669", "air": "#d97706", "water": "#2563eb",
+    },
+    "zodiac_icons": "#000000",
+    "background": "#ffffff",
+    "text": "#1e293b",
+    "house_lines": "#94a3b8",
+}
+
+# Zodiac sign index → element key
+_ZODIAC_ELEMENT_MAP = [
+    "fire", "earth", "air", "water",  # Aries, Tauro, Geminis, Cancer
+    "fire", "earth", "air", "water",  # Leo, Virgo, Libra, Escorpio
+    "fire", "earth", "air", "water",  # Sagitario, Capricornio, Acuario, Piscis
+]
+
+# Celestial point name → config key mapping (for the ones that differ)
+_PLANET_CONFIG_MAP = {
+    "Sun": "sun", "Moon": "moon", "Mercury": "mercury", "Venus": "venus",
+    "Mars": "mars", "Jupiter": "jupiter", "Saturn": "saturn", "Uranus": "uranus",
+    "Neptune": "neptune", "Pluto": "pluto", "Chiron": "chiron",
+    "Mean_Lilith": "mean_lilith", "True_Lilith": "true_lilith",
+    "Mean_North_Lunar_Node": "north_node", "True_North_Lunar_Node": "north_node",
+    "Mean_South_Lunar_Node": "south_node", "True_South_Lunar_Node": "south_node",
+    "Pars_Fortunae": "pars_fortunae", "Vertex": "vertex", "Anti_Vertex": "anti_vertex",
+}
+
+# CSS variable name → config key mapping for planets
+_CSS_PLANET_MAP = {
+    "sun": "sun", "moon": "moon", "mercury": "mercury", "venus": "venus",
+    "mars": "mars", "jupiter": "jupiter", "saturn": "saturn", "uranus": "uranus",
+    "neptune": "neptune", "pluto": "pluto", "chiron": "chiron",
+    "mean-node": "north_node", "true-node": "north_node",
+    "mean-lilith": "mean_lilith", "true-lilith": "true_lilith",
+    "pars-fortunae": "pars_fortunae", "vertex": "vertex", "anti-vertex": "anti_vertex",
+}
+
+
+def build_theme_from_config(colors: dict) -> tuple:
+    """
+    Build the 3 Kerykeion theme structures from simplified admin config JSON.
+
+    Args:
+        colors: dict with keys planets, aspects, zodiac_elements, zodiac_icons,
+                background, text, house_lines
+
+    Returns:
+        (colors_settings, celestial_points_settings, aspects_settings, css_string)
+    """
+    p = colors.get("planets", DEFAULT_CHART_COLORS_CONFIG["planets"])
+    a = colors.get("aspects", DEFAULT_CHART_COLORS_CONFIG["aspects"])
+    z = colors.get("zodiac_elements", DEFAULT_CHART_COLORS_CONFIG["zodiac_elements"])
+    icon_color = colors.get("zodiac_icons", DEFAULT_CHART_COLORS_CONFIG["zodiac_icons"])
+    bg = colors.get("background", DEFAULT_CHART_COLORS_CONFIG["background"])
+    text = colors.get("text", DEFAULT_CHART_COLORS_CONFIG["text"])
+    house_lines = colors.get("house_lines", DEFAULT_CHART_COLORS_CONFIG["house_lines"])
+
+    # --- 1. colors_settings ---
+    cs = {
+        "paper_0": text,
+        "paper_1": bg,
+        "houses_radix_line": house_lines,
+        "zodiac_radix_ring_0": "#cbd5e1",
+        "zodiac_radix_ring_1": "#e2e8f0",
+        "zodiac_radix_ring_2": "#cbd5e1",
+        "zodiac_transit_ring_0": "#c4b5fd",
+        "zodiac_transit_ring_1": "#ddd6fe",
+        "zodiac_transit_ring_2": "#c4b5fd",
+        "lunar_phase_0": text,
+        "lunar_phase_1": bg,
+        "first_point_of_aries": "#8b5cf6",
+    }
+    for i in range(12):
+        element = _ZODIAC_ELEMENT_MAP[i]
+        cs[f"zodiac_bg_{i}"] = z.get(element, DEFAULT_CHART_COLORS_CONFIG["zodiac_elements"][element])
+        cs[f"zodiac_icon_{i}"] = icon_color
+
+    # --- 2. celestial_points_settings (copy from default, override colors) ---
+    cps = []
+    for pt in AZTROSOFIA_CELESTIAL_POINTS:
+        entry = dict(pt)
+        config_key = _PLANET_CONFIG_MAP.get(pt["name"])
+        if config_key and config_key in p:
+            entry["color"] = p[config_key]
+        cps.append(entry)
+
+    # --- 3. aspects_settings (copy from default, override colors) ---
+    asp = []
+    for item in AZTROSOFIA_ASPECTS:
+        entry = dict(item)
+        if item["name"] in a:
+            entry["color"] = a[item["name"]]
+        asp.append(entry)
+
+    # --- 4. CSS string ---
+    css = _build_css(cs, p, a, z, icon_color, text, bg, house_lines)
+
+    return cs, cps, asp, css
+
+
+def _build_css(cs, p, a, z, icon_color, text, bg, house_lines):
+    """Build the CSS :root block from config values."""
+    lines = [":root {"]
+
+    # Main colors
+    lines.append("    /* Main Colors */")
+    lines.append(f"    --kerykeion-chart-color-paper-0: {text};")
+    lines.append(f"    --kerykeion-chart-color-paper-1: {bg};")
+    for i in range(12):
+        element = _ZODIAC_ELEMENT_MAP[i]
+        lines.append(f"    --kerykeion-chart-color-zodiac-bg-{i}: {z.get(element, '#888')};")
+    for i in range(12):
+        lines.append(f"    --kerykeion-chart-color-zodiac-icon-{i}: {icon_color};")
+    lines.append(f"    --kerykeion-chart-color-zodiac-radix-ring-0: #cbd5e1;")
+    lines.append(f"    --kerykeion-chart-color-zodiac-radix-ring-1: #e2e8f0;")
+    lines.append(f"    --kerykeion-chart-color-zodiac-radix-ring-2: #cbd5e1;")
+    lines.append(f"    --kerykeion-chart-color-zodiac-transit-ring-0: #c4b5fd;")
+    lines.append(f"    --kerykeion-chart-color-zodiac-transit-ring-1: #ddd6fe;")
+    lines.append(f"    --kerykeion-chart-color-zodiac-transit-ring-2: #c4b5fd;")
+    lines.append(f"    --kerykeion-chart-color-zodiac-transit-ring-3: #c4b5fd;")
+    lines.append(f"    --kerykeion-chart-color-houses-radix-line: {house_lines};")
+    lines.append(f"    --kerykeion-chart-color-houses-transit-line: {house_lines};")
+    lines.append(f"    --kerykeion-chart-color-lunar-phase-0: {text};")
+    lines.append(f"    --kerykeion-chart-color-lunar-phase-1: {bg};")
+
+    # Aspects
+    lines.append("")
+    lines.append("    /* Aspects */")
+    for name in ["conjunction", "semi-sextile", "semi-square", "sextile", "quintile",
+                  "square", "trine", "sesquiquadrate", "biquintile", "quincunx", "opposition"]:
+        color = a.get(name, "#888888")
+        lines.append(f"    --kerykeion-chart-color-{name}: {color};")
+
+    # Planets
+    lines.append("")
+    lines.append("    /* Planets */")
+    for css_name, config_key in _CSS_PLANET_MAP.items():
+        color = p.get(config_key, "#888888")
+        lines.append(f"    --kerykeion-chart-color-{css_name}: {color};")
+
+    # Houses (angles)
+    lines.append(f"    --kerykeion-chart-color-first-house: {text};")
+    lines.append(f"    --kerykeion-chart-color-tenth-house: #64748b;")
+    lines.append(f"    --kerykeion-chart-color-seventh-house: #64748b;")
+    lines.append(f"    --kerykeion-chart-color-fourth-house: #64748b;")
+
+    # Remaining points (not configurable from admin, use defaults)
+    lines.append(f"    --kerykeion-chart-color-ceres: #10b981;")
+    lines.append(f"    --kerykeion-chart-color-pallas: #22d3ee;")
+    lines.append(f"    --kerykeion-chart-color-juno: #fb7185;")
+    lines.append(f"    --kerykeion-chart-color-vesta: #ef4444;")
+    lines.append(f"    --kerykeion-chart-color-east-point: #000000;")
+    lines.append(f"    --kerykeion-chart-color-eris: #7c3aed;")
+    lines.append(f"    --kerykeion-chart-color-earth: #10b981;")
+    lines.append(f"    --kerykeion-chart-color-pholus: #f97316;")
+    lines.append(f"    --kerykeion-chart-color-sedna: #f97316;")
+    lines.append(f"    --kerykeion-chart-color-haumea: #60a5fa;")
+    lines.append(f"    --kerykeion-chart-color-makemake: #10b981;")
+    lines.append(f"    --kerykeion-chart-color-ixion: #ef4444;")
+    lines.append(f"    --kerykeion-chart-color-orcus: #6366f1;")
+    lines.append(f"    --kerykeion-chart-color-quaoar: #a78bfa;")
+    lines.append(f"    --kerykeion-chart-color-regulus: #fbbf24;")
+    lines.append(f"    --kerykeion-chart-color-spica: #10b981;")
+
+    # Arab Parts
+    lines.append("")
+    lines.append("    /* Arab Parts */")
+    lines.append(f"    --kerykeion-chart-color-pars-spiritus: #8b5cf6;")
+    lines.append(f"    --kerykeion-chart-color-pars-amoris: #fb7185;")
+    lines.append(f"    --kerykeion-chart-color-pars-fidei: #06b6d4;")
+
+    # Elements Percentage
+    lines.append("")
+    lines.append("    /* Elements Percentage */")
+    lines.append(f"    --kerykeion-chart-color-fire-percentage: #ef4444;")
+    lines.append(f"    --kerykeion-chart-color-earth-percentage: #10b981;")
+    lines.append(f"    --kerykeion-chart-color-air-percentage: #fbbf24;")
+    lines.append(f"    --kerykeion-chart-color-water-percentage: #60a5fa;")
+
+    # Modalities Percentage
+    lines.append("")
+    lines.append("    /* Modalities Percentage */")
+    lines.append(f"    --kerykeion-chart-color-cardinal-percentage: #ef4444;")
+    lines.append(f"    --kerykeion-chart-color-fixed-percentage: #10b981;")
+    lines.append(f"    --kerykeion-chart-color-mutable-percentage: #60a5fa;")
+
+    # Other
+    lines.append("")
+    lines.append("    /* Other */")
+    lines.append(f"    --kerykeion-chart-color-house-number: {house_lines};")
+
+    lines.append("}")
+    return "\n".join(lines) + "\n"
