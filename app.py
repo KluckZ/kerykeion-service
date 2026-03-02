@@ -71,6 +71,25 @@ class SVGGenerationRequest(BaseModel):
     colors: Optional[dict] = None
 
 
+class TransitPositionsRequest(BaseModel):
+    """Request model para posiciones de tránsitos en una fecha dada"""
+    year: int = Field(..., ge=1900, le=2100)
+    month: int = Field(..., ge=1, le=12)
+    day: int = Field(..., ge=1, le=31)
+    hour: int = Field(12, ge=0, le=23)
+    minute: int = Field(0, ge=0, le=59)
+    timezone: str = Field("UTC")
+    latitude: Optional[float] = Field(None, ge=-90, le=90)
+    longitude: Optional[float] = Field(None, ge=-180, le=180)
+    city: Optional[str] = Field(None)
+
+
+class LunarEventsRequest(BaseModel):
+    """Request model para detección de lunas nuevas y llenas en un rango"""
+    start_date: str  # "YYYY-MM-DD"
+    end_date: str    # "YYYY-MM-DD" — máx 6 meses
+
+
 @app.get("/")
 async def root():
     """
@@ -85,9 +104,11 @@ async def root():
         "source_code": "https://github.com/KluckZ/kerykeion-service",
         "attribution": "Powered by Kerykeion - https://github.com/g-battaglia/kerykeion",
         "endpoints": {
-            "/health": "Health check",
-            "/calculate": "POST - Calcular carta natal",
-            "/generate-svg": "POST - Generar imagen SVG de carta"
+            "/health": "GET - Health check",
+            "/calculate": "POST - Calcular carta natal completa",
+            "/generate-svg": "POST - Generar imagen SVG de carta",
+            "/transit-positions": "POST - Posiciones planetarias para cualquier fecha",
+            "/lunar-events": "POST - Lunas nuevas y llenas en rango (máx 6 meses)"
         }
     }
 
@@ -337,6 +358,161 @@ async def generate_svg(request: SVGGenerationRequest):
                 "message": str(e)
             }
         )
+
+
+def _refine_lunar_event(day1, day2, target_angle, angle_fn):
+    """Bisección para precisión de ~1.5 minutos en la hora del evento."""
+    from datetime import timedelta
+    low, high = day1, day2
+    for _ in range(10):
+        mid = low + (high - low) / 2
+        angle = angle_fn(mid)
+        diff = (angle - target_angle + 180.0) % 360.0 - 180.0
+        if diff < 0:
+            high = mid
+        else:
+            low = mid
+    return low + (high - low) / 2
+
+
+def _get_moon_sign_at(dt):
+    """Signo zodiacal de la Luna en un momento dado."""
+    import pyswisseph as swe
+    SIGNS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+             "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+    jd = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute / 60.0)
+    moon_pos = swe.calc_ut(jd, swe.MOON)[0][0]
+    return SIGNS[int(moon_pos / 30)]
+
+
+@app.post("/transit-positions")
+async def transit_positions(request: TransitPositionsRequest):
+    """
+    Posiciones de 12 cuerpos celestes para cualquier fecha.
+    Las posiciones planetarias son globales (lat/lng solo afectan la Luna con alta precisión).
+    """
+    try:
+        lat = request.latitude or 0.0
+        lng = request.longitude or 0.0
+        city = request.city or "Greenwich"
+
+        subject = AstrologicalSubjectFactory.from_birth_data(
+            name="Transit",
+            year=request.year,
+            month=request.month,
+            day=request.day,
+            hour=request.hour,
+            minute=request.minute,
+            city=city,
+            lat=lat,
+            lng=lng,
+            tz_str=request.timezone,
+            online=False,
+            active_points=[
+                "Sun", "Moon", "Mercury", "Venus", "Mars",
+                "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
+                "True_North_Lunar_Node", "Chiron"
+            ]
+        )
+
+        planets = extract_planets(subject)
+
+        return {
+            "success": True,
+            "data": {
+                "planets": planets,
+                "date": f"{request.year}-{request.month:02d}-{request.day:02d}",
+                "time": f"{request.hour:02d}:{request.minute:02d}",
+                "timezone": request.timezone
+            }
+        }
+
+    except Exception as e:
+        logger.error(f"Error calculando posiciones de tránsito: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "Error calculando posiciones de tránsito",
+                "message": str(e)
+            }
+        )
+
+
+@app.post("/lunar-events")
+async def lunar_events(request: LunarEventsRequest):
+    """
+    Detecta lunas nuevas y llenas en un rango de fechas.
+    Algoritmo optimizado: salto 13 días tras cada evento (ciclo sinódico ~29.53 días).
+    Máximo 6 meses por petición.
+    """
+    import pyswisseph as swe
+    from datetime import datetime, timedelta
+
+    start = datetime.strptime(request.start_date, "%Y-%m-%d")
+    end = datetime.strptime(request.end_date, "%Y-%m-%d")
+
+    if (end - start).days > 185:
+        raise HTTPException(status_code=400, detail="Range cannot exceed 6 months")
+
+    def sun_moon_angle(dt: datetime) -> float:
+        """Ángulo Luna−Sol en [0°, 360°). 0°=Nueva, 180°=Llena."""
+        jd = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute / 60.0)
+        sun_pos = swe.calc_ut(jd, swe.SUN)[0][0]
+        moon_pos = swe.calc_ut(jd, swe.MOON)[0][0]
+        return (moon_pos - sun_pos) % 360.0
+
+    events = []
+    JUMP = timedelta(days=13)  # tras cada evento, el siguiente está en ~14.77 días
+
+    current = start
+    prev_angle = sun_moon_angle(current)
+
+    while current <= end:
+        next_day = current + timedelta(days=1)
+        if next_day > end:
+            break
+
+        curr_angle = sun_moon_angle(next_day)
+        event_found = None
+
+        # Luna Nueva: ángulo cruza 0° en sentido ascendente (360°→0°)
+        if prev_angle > 350.0 and curr_angle < 10.0:
+            event_found = ("luna_nueva", 0.0)
+
+        # Luna Llena: ángulo cruza 180° en sentido ascendente
+        elif prev_angle < 180.0 <= curr_angle:
+            event_found = ("luna_llena", 180.0)
+
+        if event_found:
+            event_type, target = event_found
+            event_dt = _refine_lunar_event(current, next_day, target, sun_moon_angle)
+            sign_info = _get_moon_sign_at(event_dt)
+            label = "Luna Nueva" if event_type == "luna_nueva" else "Luna Llena"
+            events.append({
+                "type": event_type,
+                "date": event_dt.strftime("%Y-%m-%d"),
+                "time": event_dt.strftime("%H:%M"),
+                "datetime_utc": event_dt.isoformat(),
+                "moon_sign": sign_info,
+                "name": f"{label} en {sign_info}"
+            })
+            # Saltar al vecindario del próximo evento
+            current = event_dt + JUMP
+            prev_angle = sun_moon_angle(current)
+        else:
+            prev_angle = curr_angle
+            current = next_day
+
+    events.sort(key=lambda e: e["datetime_utc"])
+
+    return {
+        "success": True,
+        "data": {
+            "events": events,
+            "total": len(events),
+            "range": {"start": request.start_date, "end": request.end_date}
+        }
+    }
 
 
 if __name__ == "__main__":
