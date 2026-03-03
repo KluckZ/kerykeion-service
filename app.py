@@ -484,8 +484,9 @@ async def _lunar_events_impl(request: LunarEventsRequest):
         curr_angle = sun_moon_angle(next_day)
         event_found = None
 
-        # Luna Nueva: ángulo cruza 0° en sentido ascendente (360°→0°)
-        if prev_angle > 350.0 and curr_angle < 10.0:
+        # Luna Nueva: ángulo cruza 0° (wrap de ~360° a ~0°-30°)
+        # Robusto: detecta aunque el muestreo diario no caiga exactamente en el cruce
+        if prev_angle > curr_angle + 300:
             event_found = ("luna_nueva", 0.0)
 
         # Luna Llena: ángulo cruza 180° en sentido ascendente
