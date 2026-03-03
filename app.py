@@ -377,7 +377,7 @@ def _refine_lunar_event(day1, day2, target_angle, angle_fn):
 
 def _get_moon_sign_at(dt):
     """Signo zodiacal de la Luna en un momento dado."""
-    import pyswisseph as swe
+    import swisseph as swe
     SIGNS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
              "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
     jd = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute / 60.0)
@@ -454,7 +454,7 @@ async def lunar_events(request: LunarEventsRequest):
 
 
 async def _lunar_events_impl(request: LunarEventsRequest):
-    import pyswisseph as swe
+    import swisseph as swe
     from datetime import datetime, timedelta
 
     start = datetime.strptime(request.start_date, "%Y-%m-%d")
