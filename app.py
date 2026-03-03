@@ -445,6 +445,15 @@ async def lunar_events(request: LunarEventsRequest):
     Algoritmo optimizado: salto 13 días tras cada evento (ciclo sinódico ~29.53 días).
     Máximo 6 meses por petición.
     """
+    try:
+      return await _lunar_events_impl(request)
+    except Exception as e:
+      import traceback
+      logger.error(f"[lunar-events] Unhandled error: {traceback.format_exc()}")
+      raise HTTPException(status_code=500, detail={"error": str(e), "type": type(e).__name__})
+
+
+async def _lunar_events_impl(request: LunarEventsRequest):
     import pyswisseph as swe
     from datetime import datetime, timedelta
 
