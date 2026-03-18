@@ -283,6 +283,37 @@ async def generate_svg(request: SVGGenerationRequest):
             ]
         )
 
+        # Fix Fortune: kerykeion 5.7.2 has inverted day/night formula.
+        # Correct rule: Sun in houses 7-12 = above horizon = day birth.
+        # Day  → Fortune = ASC + Moon - Sun
+        # Night → Fortune = ASC + Sun  - Moon
+        _HOUSE_NUMBERS = {
+            "First_House": 1, "Second_House": 2, "Third_House": 3, "Fourth_House": 4,
+            "Fifth_House": 5, "Sixth_House": 6, "Seventh_House": 7, "Eighth_House": 8,
+            "Ninth_House": 9, "Tenth_House": 10, "Eleventh_House": 11, "Twelfth_House": 12
+        }
+        _ZODIAC_SIGNS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+                         "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+        if subject.pars_fortunae:
+            sun_house_num = _HOUSE_NUMBERS.get(getattr(subject.sun, "house", ""), 0)
+            is_day = 7 <= sun_house_num <= 12
+            asc_deg = subject.first_house.abs_pos
+            sun_deg = subject.sun.abs_pos
+            moon_deg = subject.moon.abs_pos
+            if is_day:
+                fortune_deg = (asc_deg + moon_deg - sun_deg) % 360
+            else:
+                fortune_deg = (asc_deg + sun_deg - moon_deg) % 360
+            pf = subject.pars_fortunae
+            pf.abs_pos = fortune_deg
+            pf.sign_num = int(fortune_deg / 30)
+            pf.sign = _ZODIAC_SIGNS[pf.sign_num]
+            pf.position = fortune_deg % 30
+            logger.info(
+                f"Fortune corrected: {'day' if is_day else 'night'} birth "
+                f"(Sun house {sun_house_num}) → {pf.sign} {pf.position:.2f}°"
+            )
+
         # Crear datos del chart
         chart_data = ChartDataFactory.create_natal_chart_data(subject)
 
