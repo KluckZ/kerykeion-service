@@ -400,9 +400,9 @@ def _refine_lunar_event(day1, day2, target_angle, angle_fn):
         angle = angle_fn(mid)
         diff = (angle - target_angle + 180.0) % 360.0 - 180.0
         if diff < 0:
-            high = mid
-        else:
             low = mid
+        else:
+            high = mid
     return low + (high - low) / 2
 
 
