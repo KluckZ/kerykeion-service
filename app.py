@@ -442,11 +442,12 @@ async def transit_positions(request: TransitPositionsRequest):
             active_points=[
                 "Sun", "Moon", "Mercury", "Venus", "Mars",
                 "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
-                "True_North_Lunar_Node", "Chiron"
+                "True_North_Lunar_Node", "Chiron", "Mean_Lilith"
             ]
         )
 
         planets = extract_planets(subject)
+        planets = [p for p in planets if p["name"] not in ("asc", "mc")]
 
         return {
             "success": True,
