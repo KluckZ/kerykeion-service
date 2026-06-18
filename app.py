@@ -558,7 +558,9 @@ async def generate_transit_svg(request: TransitSVGRequest):
             if a["p1_name"] not in ANGLES and a["p2_name"] not in ANGLES
         ]
 
-        svg_content = drawer.generate_svg_string(minify=True, remove_css_variables=True)
+        # minify=False evita scour (crashea con KeyError:'fill' en la doble rueda);
+        # remove_css_variables=True igual inlinea los colores. SVG mas grande pero valido.
+        svg_content = drawer.generate_svg_string(minify=False, remove_css_variables=True)
 
         # Post-process SVG to make zodiac strip opaque and inner area white.
         # scourString converts inline styles to presentation attributes, so we
