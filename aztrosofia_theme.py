@@ -52,13 +52,15 @@ AZTROSOFIA_COLORS = {
     "zodiac_radix_ring_1": "#e2e8f0",   # Anillo medio (slate 200)
     "zodiac_radix_ring_2": "#cbd5e1",   # Anillo interior (slate 300)
 
-    # Anillos de transito (si aplica)
+    # Anillos de transito (doble rueda)
     "zodiac_transit_ring_0": "#c4b5fd",
     "zodiac_transit_ring_1": "#ddd6fe",
     "zodiac_transit_ring_2": "#c4b5fd",
+    "zodiac_transit_ring_3": "#a78bfa",  # Borde exterior del anillo de transito (violet 400)
 
     # Lineas de casas
     "houses_radix_line": "#94a3b8",     # Slate 400
+    "houses_transit_line": "#c4b5fd",   # Lineas de casas del transito (violet 300)
 
     # Fase lunar
     "lunar_phase_0": "#1e293b",         # Oscuro
@@ -374,12 +376,14 @@ def build_theme_from_config(colors: dict) -> tuple:
         "paper_0": text,
         "paper_1": bg,
         "houses_radix_line": house_lines,
+        "houses_transit_line": "#c4b5fd",
         "zodiac_radix_ring_0": "#cbd5e1",
         "zodiac_radix_ring_1": "#e2e8f0",
         "zodiac_radix_ring_2": "#cbd5e1",
         "zodiac_transit_ring_0": "#c4b5fd",
         "zodiac_transit_ring_1": "#ddd6fe",
         "zodiac_transit_ring_2": "#c4b5fd",
+        "zodiac_transit_ring_3": "#a78bfa",
         "lunar_phase_0": text,
         "lunar_phase_1": bg,
         "first_point_of_aries": "#8b5cf6",
