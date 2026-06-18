@@ -90,6 +90,36 @@ class LunarEventsRequest(BaseModel):
     end_date: str    # "YYYY-MM-DD" — máx 6 meses
 
 
+class TransitSubjectData(BaseModel):
+    name: str = "Transit"
+    year: int
+    month: int
+    day: int
+    hour: int
+    minute: int
+    latitude: float | None = None
+    longitude: float | None = None
+    city: str | None = None
+    timezone: str
+
+class NatalSubjectData(BaseModel):
+    name: str = "Natal"
+    year: int
+    month: int
+    day: int
+    hour: int
+    minute: int
+    latitude: float
+    longitude: float
+    city: str
+    timezone: str
+
+class TransitSVGRequest(BaseModel):
+    natal: NatalSubjectData
+    transit: TransitSubjectData
+    colors: dict | None = None
+
+
 @app.get("/")
 async def root():
     """
@@ -468,6 +498,68 @@ async def transit_positions(request: TransitPositionsRequest):
                 "message": str(e)
             }
         )
+
+
+@app.post("/generate-transit-svg")
+async def generate_transit_svg(request: TransitSVGRequest):
+    """
+    Genera SVG de DOBLE RUEDA (natal interna + transito externa) con tema Aztrosofia.
+    Sin persistencia: devuelve el SVG string inline.
+    """
+    try:
+        n = request.natal
+        t = request.transit
+        logger.info(f"Generando SVG de transito: natal={n.name} transit={t.year}-{t.month:02d}-{t.day:02d}")
+
+        active = [
+            "Sun", "Moon", "Mercury", "Venus", "Mars",
+            "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
+            "True_North_Lunar_Node", "True_South_Lunar_Node",
+            "Chiron", "Mean_Lilith",
+            "Ascendant", "Medium_Coeli", "Descendant", "Imum_Coeli",
+            "Pars_Fortunae", "Vertex",
+        ]
+        natal_subject = AstrologicalSubjectFactory.from_birth_data(
+            name=n.name, year=n.year, month=n.month, day=n.day, hour=n.hour, minute=n.minute,
+            city=n.city, lng=n.longitude, lat=n.latitude, tz_str=n.timezone,
+            online=False, active_points=active,
+        )
+        transit_subject = AstrologicalSubjectFactory.from_birth_data(
+            name="Transit", year=t.year, month=t.month, day=t.day, hour=t.hour, minute=t.minute,
+            city=t.city or "Greenwich", lng=t.longitude or 0.0, lat=t.latitude or 0.0, tz_str=t.timezone,
+            online=False, active_points=active,
+        )
+
+        chart_data = ChartDataFactory.create_transit_chart_data(natal_subject, transit_subject)
+
+        if request.colors:
+            colors_s, celestial_s, aspects_s, css_s = build_theme_from_config(request.colors)
+        else:
+            colors_s = AZTROSOFIA_COLORS
+            celestial_s = AZTROSOFIA_CELESTIAL_POINTS
+            aspects_s = AZTROSOFIA_ASPECTS
+            css_s = AZTROSOFIA_CSS
+
+        drawer = ChartDrawer(
+            chart_data=chart_data,
+            theme=None,
+            colors_settings=colors_s,
+            celestial_points_settings=celestial_s,
+            aspects_settings=aspects_s,
+            chart_language="ES",
+        )
+        drawer.color_style_tag = css_s
+
+        svg_content = drawer.generate_svg_string(minify=True, remove_css_variables=True)
+        logger.info(f"SVG de transito generado ({len(svg_content)} bytes)")
+        return {
+            "success": True,
+            "svg": svg_content,
+            "metadata": {"natal": n.name, "transit_date": f"{t.year}-{t.month:02d}-{t.day:02d}"},
+        }
+    except Exception as e:
+        logger.exception("Error generando SVG de transito")
+        return {"success": False, "error": str(e)}
 
 
 @app.post("/lunar-events")
