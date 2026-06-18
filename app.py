@@ -137,6 +137,7 @@ async def root():
             "/health": "GET - Health check",
             "/calculate": "POST - Calcular carta natal completa",
             "/generate-svg": "POST - Generar imagen SVG de carta",
+            "/generate-transit-svg": "POST - Generar imagen SVG de doble rueda (natal + tránsito)",
             "/transit-positions": "POST - Posiciones planetarias para cualquier fecha",
             "/lunar-events": "POST - Lunas nuevas y llenas en rango (máx 6 meses)"
         }
@@ -550,7 +551,30 @@ async def generate_transit_svg(request: TransitSVGRequest):
         )
         drawer.color_style_tag = css_s
 
+        # Filtrar aspectos a angulos (no dibujar lineas a ASC/MC/DSC/IC)
+        ANGLES = {"Ascendant", "Medium_Coeli", "Descendant", "Imum_Coeli"}
+        drawer.aspects_list = [
+            a for a in drawer.aspects_list
+            if a["p1_name"] not in ANGLES and a["p2_name"] not in ANGLES
+        ]
+
         svg_content = drawer.generate_svg_string(minify=True, remove_css_variables=True)
+
+        # Post-process SVG to make zodiac strip opaque and inner area white.
+        # scourString converts inline styles to presentation attributes, so we
+        # need to handle both formats:
+        #   inline style: fill-opacity:.2;   (before scour)
+        #   presentation:  fill-opacity='.2' (after scour + quote replace)
+        for val in ['.5', '0.5']:  # zodiac slices (library hardcodes 0.5)
+            svg_content = svg_content.replace(f'fill-opacity:{val};', 'fill-opacity:1;')
+            svg_content = svg_content.replace(f"fill-opacity='{val}'", "fill-opacity='1'")
+        for val in ['.2', '0.2']:  # second circle - planet area
+            svg_content = svg_content.replace(f'fill-opacity:{val};', 'fill-opacity:1;')
+            svg_content = svg_content.replace(f"fill-opacity='{val}'", "fill-opacity='1'")
+        for val in ['.8', '0.8']:  # third circle - aspect area
+            svg_content = svg_content.replace(f'fill-opacity:{val};', 'fill-opacity:1;')
+            svg_content = svg_content.replace(f"fill-opacity='{val}'", "fill-opacity='1'")
+
         logger.info(f"SVG de transito generado ({len(svg_content)} bytes)")
         return {
             "success": True,
