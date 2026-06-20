@@ -558,9 +558,11 @@ async def generate_transit_svg(request: TransitSVGRequest):
             if a["p1_name"] not in ANGLES and a["p2_name"] not in ANGLES
         ]
 
+        # Rueda SOLA (sin tablero de aspectos ni tablas de posiciones) — kerykeion 5.x
+        # expone wheel-only nativo; comparte el mismo post-processing que generate_svg_string.
         # minify=False evita scour (crashea con KeyError:'fill' en la doble rueda);
         # remove_css_variables=True igual inlinea los colores. SVG mas grande pero valido.
-        svg_content = drawer.generate_svg_string(minify=False, remove_css_variables=True)
+        svg_content = drawer.generate_wheel_only_svg_string(minify=False, remove_css_variables=True)
 
         # Post-process SVG to make zodiac strip opaque and inner area white.
         # scourString converts inline styles to presentation attributes, so we
